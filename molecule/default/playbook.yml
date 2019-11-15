@@ -1,0 +1,12 @@
+---
+- name: Converge acme user
+  hosts: all
+  roles:
+    - role: acme-sh
+
+- name: Converge root user
+  hosts: all
+  roles:
+    - role: acme-sh
+      vars:
+        acme_sh_user: root

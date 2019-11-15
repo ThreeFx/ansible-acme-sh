@@ -1,0 +1,55 @@
+---
+- name: Create acme user
+  become: True
+  user:
+    name: "{{ acme_sh_user }}"
+    createhome: yes
+    home: "/home/{{ acme_sh_user }}"
+  when: acme_sh_user != 'root'
+
+- name: Set homedir
+  set_fact:
+    acme_sh_homedir: "{% if acme_sh_user == 'root' %}/root{% else %}/home/{{ acme_sh_user }}{% endif %}"
+
+- name: Install dependencies
+  become: True
+  apt:
+    name:
+      - acl
+      - curl
+      - socat
+      - git
+      - cron
+    install_recommends: no
+    state: present
+
+- block:
+    - name: Clone the acme.sh repository
+      git:
+        repo: "https://github.com/Neilpang/acme.sh"
+        dest: "{{ acme_sh_homedir }}/acme.sh"
+        version: "{{ acme_sh_version }}"
+      register: acme_sh_clone
+
+    - name: Install acme.sh
+      shell: >
+        ./acme.sh --install
+      args:
+        chdir: "{{ acme_sh_homedir }}/acme.sh"
+      when: acme_sh_clone.changed
+
+    - name: Fetch certificates
+      shell: >
+        {{ acme_sh_homedir }}/.acme.sh/acme.sh --issue
+        {% if acme_sh_staging %}--staging {% endif %}
+        -d {{ item.primary_domain }}
+        {% if item.webroot is defined %}-w {{ item.webroot }} {% else %}--standalone {% endif %}
+        {% for domain in item.additional_domains|default([]) %}-d {{ domain }} {% endfor %}
+        --keylength ec-384
+      args:
+        executable: /bin/bash
+      with_items:
+        - "{{ acme_sh_certificates }}"
+
+  become: true
+  become_user: "{{ acme_sh_user }}"
