@@ -55,18 +55,26 @@
         owner: "{{ acme_sh_cert_group|default(acme_sh_user) }}"
         state: directory
 
-    - name: Fetch certificates
+    - name: Issue certificates
       shell: >
         {{ acme_sh_homedir }}/.acme.sh/acme.sh --issue
         {% if acme_sh_staging %}--staging {% endif %}
-        --install-cert
+        -d {{ item.primary_domain }}
+        {% if item.webroot is defined %}-w {{ item.webroot }} {% else %}--standalone {% endif %}
+        {% for domain in item.additional_domains|default([]) %}-d {{ domain }} {% endfor %}
+        --keylength ec-384
+      args:
+        executable: /bin/bash
+      with_items:
+        - "{{ acme_sh_certificates }}"
+
+    - name: Install certificates
+      shell: >
+        {{ acme_sh_homedir }}/.acme.sh/acme.sh --install-cert
         -d {{ item.primary_domain }}
         --fullchain-file {{ item.primary_domain }}.pem
         --key-file {{ item.primary_domain }}.key
-        {% if item.webroot is defined %}-w {{ item.webroot }} {% else %}--standalone {% endif %}
-        {% for domain in item.additional_domains|default([]) %}-d {{ domain }} {% endfor %}
         {% if item.reloadcmd is defined %}--reloadcmd "{{ item.reloadcmd }}"{% endif %}
-        --keylength ec-384
       args:
         executable: /bin/bash
       with_items:
