@@ -12,7 +12,7 @@ Role Variables
 --------------
 
 | Variable Name | Default value | Description |
-----------------+---------------+--------------
+----------------|---------------|--------------
 `acme_sh_user` | `"acme"` | User to run as
 `acme_sh_staging` | true | Whether to use the Let's Encrypt staging API
 `acme_sh_version` | "master" | Revision to check out
