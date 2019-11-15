@@ -65,7 +65,7 @@
         --key-file {{ item.primary_domain }}.key
         {% if item.webroot is defined %}-w {{ item.webroot }} {% else %}--standalone {% endif %}
         {% for domain in item.additional_domains|default([]) %}-d {{ domain }} {% endfor %}
-        {% if item.reloadcmd is defined %}--reloadcmd {{ item.reloadcmd }}{% endif %}
+        {% if item.reloadcmd is defined %}--reloadcmd "{{ item.reloadcmd }}"{% endif %}
         --keylength ec-384
       args:
         executable: /bin/bash
