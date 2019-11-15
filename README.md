@@ -16,8 +16,7 @@ Role Variables
 `acme_sh_user` | `"acme"` | User to run as
 `acme_sh_staging` | true | Whether to use the Let's Encrypt staging API
 `acme_sh_version` | "master" | Revision to check out
-`acme_sh_certificates` | [] | Certificates to fetch, currently only HTTP
-validation supported. See `defaults/main.yml` for more information
+`acme_sh_certificates` | [] | Certificates to fetch, currently only HTTP validation supported. See `defaults/main.yml` for more information
 
 Dependencies
 ------------
