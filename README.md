@@ -14,6 +14,7 @@ Role Variables
 | Variable Name | Default value | Description |
 ----------------|---------------|--------------
 `acme_sh_user` | `"acme"` | User to run as
+`acme_sh_user_sudo_commands` | [] | List of (privileged) commands the acme user should be able to execute as root
 `acme_sh_staging` | true | Whether to use the Let's Encrypt staging API
 `acme_sh_version` | "master" | Revision to check out
 `acme_sh_certificates` | [] | Certificates to fetch, currently only HTTP validation supported. See `defaults/main.yml` for more information

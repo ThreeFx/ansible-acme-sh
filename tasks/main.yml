@@ -1,5 +1,5 @@
 ---
-- name: Create acme user
+- name: Ensure acme user exists
   become: True
   user:
     name: "{{ acme_sh_user }}"
@@ -20,8 +20,19 @@
       - socat
       - git
       - cron
+      - sudo
     install_recommends: no
     state: present
+
+- name: Ensure acme user may execute reload commands
+  become: True
+  lineinfile:
+    dest: /etc/sudoers
+    regexp: "^{{ acme_sh_user }}"
+    line: "{{ acme_sh_user }}\tALL=(root) NOPASSWD: {{ acme_sh_user_sudo_commands | join(', ') }}"
+    state: present
+    validate: "visudo -cf %s"
+  when: acme_sh_user_sudo_commands != []
 
 - block:
     - name: Clone the acme.sh repository
@@ -38,13 +49,23 @@
         chdir: "{{ acme_sh_homedir }}/acme.sh"
       when: acme_sh_clone.changed
 
+    - name: Prepare installation directory
+      file:
+        path: "{{ acme_sh_homedir }}/certs"
+        owner: "{{ acme_sh_cert_group|default(acme_sh_user) }}"
+        state: directory
+
     - name: Fetch certificates
       shell: >
         {{ acme_sh_homedir }}/.acme.sh/acme.sh --issue
         {% if acme_sh_staging %}--staging {% endif %}
+        --install-cert
         -d {{ item.primary_domain }}
+        --fullchain-file {{ item.primary_domain }}.pem
+        --key-file {{ item.primary_domain }}.key
         {% if item.webroot is defined %}-w {{ item.webroot }} {% else %}--standalone {% endif %}
         {% for domain in item.additional_domains|default([]) %}-d {{ domain }} {% endfor %}
+        {% if item.reloadcmd is defined %}--reloadcmd {{ item.reloadcmd }}{% endif %}
         --keylength ec-384
       args:
         executable: /bin/bash

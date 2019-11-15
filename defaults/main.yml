@@ -1,7 +1,11 @@
 ---
 acme_sh_user: "acme"
-acme_sh_staging: true
+acme_sh_user_sudo_commands: []
+# - /bin/systemctl reload nginx
+# - /bin/systemctl reload apache2
+# - ...
 
+acme_sh_staging: true
 acme_sh_version: "master"
 
 acme_sh_certificates: []
@@ -10,3 +14,4 @@ acme_sh_certificates: []
 #      - www.example.org
 #    webroot: /path/to/web/root     # optional, path to webroot to use. If not specified
                                     # then standalone issue mode will be used.
+#    reloadcmd: restart webserver   # optional, command to execute after successful issue

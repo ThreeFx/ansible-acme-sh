@@ -3,6 +3,9 @@
   hosts: all
   roles:
     - role: acme-sh
+      vars:
+        acme_sh_user_sudo_commands:
+          - /bin/systemctl restart nginx
 
 - name: Converge root user
   hosts: all
