@@ -71,7 +71,7 @@
     - name: Install certificates
       shell: >
         {{ acme_sh_homedir }}/.acme.sh/acme.sh --install-cert
-        -d {{ item.primary_domain }}
+        -d {{ item.primary_domain }}_ecc
         --fullchain-file {{ item.primary_domain }}.pem
         --key-file {{ item.primary_domain }}.key
         {% if item.reloadcmd is defined %}--reloadcmd "{{ item.reloadcmd }}"{% endif %}
