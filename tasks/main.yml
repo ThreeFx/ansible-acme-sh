@@ -72,8 +72,8 @@
       shell: >
         {{ acme_sh_homedir }}/.acme.sh/acme.sh --force --install-cert
         -d {{ item.primary_domain }}_ecc
-        --fullchain-file {{ item.primary_domain }}.pem
-        --key-file {{ item.primary_domain }}.key
+        --fullchain-file {{ acme_sh_homedir }}/certs/{{ item.primary_domain }}.pem
+        --key-file {{ acme_sh_homedir }}/certs/{{ item.primary_domain }}.key
         {% if item.reloadcmd is defined %}--reloadcmd "{{ item.reloadcmd }}"{% endif %}
       args:
         executable: /bin/bash
