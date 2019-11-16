@@ -57,7 +57,7 @@
 
     - name: Issue certificates
       shell: >
-        {{ acme_sh_homedir }}/.acme.sh/acme.sh --issue
+        {{ acme_sh_homedir }}/.acme.sh/acme.sh --force --issue
         {% if acme_sh_staging %}--staging {% endif %}
         -d {{ item.primary_domain }}
         {% if item.webroot is defined %}-w {{ item.webroot }} {% else %}--standalone {% endif %}
@@ -70,7 +70,7 @@
 
     - name: Install certificates
       shell: >
-        {{ acme_sh_homedir }}/.acme.sh/acme.sh --install-cert
+        {{ acme_sh_homedir }}/.acme.sh/acme.sh --force --install-cert
         -d {{ item.primary_domain }}_ecc
         --fullchain-file {{ item.primary_domain }}.pem
         --key-file {{ item.primary_domain }}.key
