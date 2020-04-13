@@ -65,7 +65,7 @@
 
     - name: Issue certificates
       shell: >
-        {{ acme_sh_homedir }}/.acme.sh/acme.sh --force --issue
+        {{ acme_sh_homedir }}/.acme.sh/acme.sh --issue
         {% if acme_sh_staging %}--staging {% endif %}
         -d {{ item.primary_domain }}
         {% if item.webroot is defined %}-w {{ item.webroot }} {% elif item.dns_provider is defined %}--dns {{ item.dns_provider }} {% else %}--standalone {% endif %}
