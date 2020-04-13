@@ -73,6 +73,9 @@
         --keylength ec-384
       args:
         executable: /bin/bash
+      register: acme_sh_issue_certificates
+      failed_when: ( result.rc not in [0, 2] )
+      changed_when: ( result.rc not in [2] )
       with_items: "{{ acme_sh_certificates }}"
 
     - name: Install certificates
