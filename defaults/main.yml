@@ -8,10 +8,16 @@ acme_sh_user_sudo_commands: []
 acme_sh_staging: true
 acme_sh_version: "master"
 
+acme_sh_config_vars: []
+# - key: SOME_ENV_VAR               # required, name of the config option
+#   value: asdf                     # required, value of the config option
+
 acme_sh_certificates: []
 #  - primary_domain: "example.org"  # required, primary domain (and name) for this certificate
 #  - additional_domains:            # optional, SANs to issue for certificate
 #      - www.example.org
-#    webroot: /path/to/web/root     # optional, path to webroot to use. If not specified
-                                    # then standalone issue mode will be used.
+#    webroot: /path/to/web/root     # optional, path to webroot to use
+#    dns_provider: gandi            # optional, domain for dns validation to use
+#                                   # If neigher webroot nor dns_provider are
+#                                   # specified, standalone mode will be used.
 #    reloadcmd: restart webserver   # optional, command to execute after successful issue
